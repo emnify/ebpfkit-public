@@ -5,7 +5,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/EMnify/ebpfkit"
+	"opensource.emnify.fyi/go/ebpfkit"
 )
 
 // RequireNoError aborts the test if the err value is non-nil, similarly

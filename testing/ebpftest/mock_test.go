@@ -21,7 +21,7 @@ type mockedFuncsAB struct {
 }
 
 func TestBasicMock(t *testing.T) {
-	RequirePrivileges(t)
+	SkipIfIncapable(t)
 
 	spec, err := loadMk()
 	require.NoError(t, err)
@@ -81,7 +81,7 @@ func TestBasicMock(t *testing.T) {
 }
 
 func TestReplaceMain(t *testing.T) {
-	RequirePrivileges(t)
+	SkipIfIncapable(t)
 
 	type mockedFuncs struct {
 		mockedFuncsAB
@@ -115,7 +115,7 @@ func TestReplaceMain(t *testing.T) {
 }
 
 func TestReportIndirectUnknown(t *testing.T) {
-	RequirePrivileges(t)
+	SkipIfIncapable(t)
 
 	type mockedTest struct {
 		Test func(any) `ebpf:"test"`
@@ -142,7 +142,7 @@ func TestReportIndirectUnknown(t *testing.T) {
 }
 
 func TestMockAny(t *testing.T) {
-	RequirePrivileges(t)
+	SkipIfIncapable(t)
 
 	// Any, any handling.
 	type mockedB struct {
