@@ -9,9 +9,9 @@ import (
 	"github.com/cilium/ebpf"
 )
 
-// VariableSet is a convenience wrapper for seting eBPF variables in
+// SetVariable is a convenience wrapper for seting eBPF variables in
 // tests.
-func VariableSet(t *testing.T, v *ebpf.Variable, value any) {
+func SetVariable(t *testing.T, v *ebpf.Variable, value any) {
 	t.Helper()
 	require.NoError(t, v.Set(value))
 }
@@ -19,7 +19,7 @@ func VariableSet(t *testing.T, v *ebpf.Variable, value any) {
 // VariableEqual asserts that eBPF variable has expected value.
 // On failure, similarly to github.com/stretchr/testify/assert,
 // the test continues.
-func VariableEqual[Value any](t *testing.T, v *ebpf.Variable, value Value) bool {
+func VariableEqual[Value any](t *testing.T, value Value, v *ebpf.Variable) bool {
 	t.Helper()
 	var current Value
 	require.NoError(t, v.Get(&current))
@@ -29,7 +29,7 @@ func VariableEqual[Value any](t *testing.T, v *ebpf.Variable, value Value) bool 
 // RequireVariableEqual asserts that eBPF variable has expected value.
 // On failure, similarly to github.com/stretchr/testify/require,
 // the test is aborted (via .FailNow).
-func RequireVariableEqual[Value any](t *testing.T, v *ebpf.Variable, value Value) {
+func RequireVariableEqual[Value any](t *testing.T, value Value, v *ebpf.Variable) {
 	t.Helper()
 	var current Value
 	require.NoError(t, v.Get(&current))
