@@ -115,17 +115,17 @@ func TestMock(t *testing.T) {
 	mock.Expect().Foo()
 	mock.Expect().Bar(0, &foo{Member: 24})
 
-    /* Run the program
-        Note 1: the kernel expects at least 14 bytes input for XDP and SKB programs.
-        Note 2: one can also use prog.Run
-    */
-    _,_,_ = prog.Test(make([]byte, 14)) 
+	/* Run the program
+	    Note 1: the kernel expects at least 14 bytes input for XDP and SKB programs.
+	    Note 2: one can also use prog.Run
+	*/
+	_,_,_ = prog.Test(make([]byte, 14)) 
 
-    // Register new expectations. This time, the Foo mock returns a custom value.
+	// Register new expectations. This time, the Foo mock returns a custom value.
 	mock.Reset()
 	mock.Expect().Foo().Return(1)
 	mock.Expect().Bar(1, &foo{Member: 24})
-    _,_,_ = prog.Test(make([]byte, 14)) 
+	_,_,_ = prog.Test(make([]byte, 14)) 
 }
 ```
 
