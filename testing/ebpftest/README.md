@@ -111,7 +111,7 @@ func TestMock(t *testing.T) {
 	ebpftest.RequireNoError(t, spec.LoadAndAssign(&prog, nil))
 	defer prog.Close()
 
-	// Registed expectations
+	// Register expectations
 	mock.Expect().Foo()
 	mock.Expect().Bar(0, &foo{Member: 24})
 
