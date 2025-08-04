@@ -8,48 +8,64 @@ import (
 	_ "embed"
 	"fmt"
 	"io"
+	"structs"
 
 	"github.com/cilium/ebpf"
 )
 
 type testdataCounters struct {
+	_   structs.HostLayout
 	Foo uint64
-	Bar struct{ Martians uint64 }
+	Bar struct {
+		_        structs.HostLayout
+		Martians uint64
+	}
 }
 
 type testdataStatsByFunction struct {
+	_        structs.HostLayout
 	Upstream struct {
+		_  structs.HostLayout
 		Rx struct {
+			_     structs.HostLayout
 			Bytes uint64
 			Pkt   uint64
 		}
 		Tx struct {
+			_     structs.HostLayout
 			Bytes uint64
 			Pkt   uint64
 		}
 		Drop struct {
+			_     structs.HostLayout
 			Bytes uint64
 			Pkt   uint64
 		}
 		Pass struct {
+			_     structs.HostLayout
 			Bytes uint64
 			Pkt   uint64
 		}
 	}
 	Downstream struct {
+		_  structs.HostLayout
 		Rx struct {
+			_     structs.HostLayout
 			Bytes uint64
 			Pkt   uint64
 		}
 		Tx struct {
+			_     structs.HostLayout
 			Bytes uint64
 			Pkt   uint64
 		}
 		Drop struct {
+			_     structs.HostLayout
 			Bytes uint64
 			Pkt   uint64
 		}
 		Pass struct {
+			_     structs.HostLayout
 			Bytes uint64
 			Pkt   uint64
 		}
@@ -57,17 +73,22 @@ type testdataStatsByFunction struct {
 }
 
 type testdataToplevel struct {
+	_      structs.HostLayout
 	Bar    uint64
 	Nested struct {
+		_     structs.HostLayout
 		Foo   uint64
 		Dummy uint64
 	}
 }
 
 type testdataToplevelCounterVec struct {
+	_     structs.HostLayout
 	Stats struct {
+		_      structs.HostLayout
 		Bar    uint64
 		Nested struct {
+			_     structs.HostLayout
 			Foo   uint64
 			Dummy uint64
 		}
@@ -75,36 +96,47 @@ type testdataToplevelCounterVec struct {
 }
 
 type testdataToplevelTagedFields struct {
+	_          structs.HostLayout
 	Foo        uint64
 	Bar        uint64
 	CounterVec struct {
+		_     structs.HostLayout
 		Foo   uint64
 		Dummy uint64
 	}
 	OverlappingTags struct {
+		_      structs.HostLayout
 		Bar    uint64
 		Nested struct {
+			_     structs.HostLayout
 			Foo   uint64
 			Dummy uint64
 		}
 	}
 	Variations struct {
+		_        structs.HostLayout
 		Upstream struct {
+			_  structs.HostLayout
 			Rx struct {
+				_     structs.HostLayout
 				Bytes uint64
 				Pkt   uint64
 			}
 			Tx struct {
+				_     structs.HostLayout
 				Bytes uint64
 				Pkt   uint64
 			}
 		}
 		Downstream struct {
+			_  structs.HostLayout
 			Rx struct {
+				_     structs.HostLayout
 				Bytes uint64
 				Pkt   uint64
 			}
 			Tx struct {
+				_     structs.HostLayout
 				Bytes uint64
 				Pkt   uint64
 			}

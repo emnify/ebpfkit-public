@@ -9,8 +9,7 @@ import (
 	"github.com/cilium/ebpf/btf"
 	"github.com/prometheus/client_golang/prometheus"
 
-	"github.com/EMnify/ebpfkit"
-	"github.com/EMnify/ebpfkit/internal/btfutil"
+	"opensource.emnify.fyi/go/ebpfkit/internal/btfutil"
 )
 
 type MetricsOptions struct {
@@ -19,9 +18,6 @@ type MetricsOptions struct {
 
 	// Subsystem
 	Subsystem string
-
-	// MapName is the map to parse
-	MapName string
 
 	// SubStructPath refers to a nested struct within map value type
 	// (selects a subset of data stored in the map)
@@ -35,22 +31,30 @@ type MetricsOptions struct {
 // Collector uses ebpf type info (BTF) to locate uint64 struct fields.
 // Each field, including ones found in nested structures, is exposed as
 // Prometheus metric.
-func NewMetrics(loader *ebpfkit.Loader, opts MetricsOptions) (*Metrics, error) {
+func NewMetrics(m *ebpf.Map, spec *ebpf.MapSpec, opts *MetricsOptions) (*Metrics, error) {
 	var met Metrics
 
-	// verify target map (opts.MapName)
-	spec := loader.CollectionSpec.Maps[opts.MapName]
+	if opts == nil {
+		opts = &MetricsOptions{}
+	}
 	if spec == nil {
-		return nil, fmt.Errorf("map %q: not found in spec", opts.MapName)
+		return nil, errors.New("nil ebpf.MapSpec")
 	}
-	if spec.Type != ebpf.PerCPUArray {
-		return nil, fmt.Errorf("map %q: expecting %s, got %s", opts.MapName, ebpf.PerCPUArray, spec.Type)
+	if m == nil {
+		return nil, errors.New("nil ebpf.Map")
 	}
-	if spec.MaxEntries != 1 {
-		return nil, fmt.Errorf("map %q: expecting a map with 1 entry", opts.MapName)
+	if err := spec.Compatible(m); err != nil {
+		return nil, fmt.Errorf("inconsitent ebpf.Map and ebpf.MapSpec: %w", err)
+	}
+
+	if m.Type() != ebpf.PerCPUArray {
+		return nil, fmt.Errorf("expecting %s, got %s", ebpf.PerCPUArray, m.Type())
+	}
+	if m.MaxEntries() != 1 {
+		return nil, errors.New("expecting a map with 1 entry")
 	}
 	if spec.Value == nil {
-		return nil, fmt.Errorf("map %q: type info missing", opts.MapName)
+		return nil, errors.New("type info missing")
 	}
 
 	// apply opts.SubStructPath
@@ -69,12 +73,12 @@ func NewMetrics(loader *ebpfkit.Loader, opts MetricsOptions) (*Metrics, error) {
 		return nil, err
 	}
 	if len(ms.metrics) == 0 {
-		return nil, fmt.Errorf("map %q: no metrics found", opts.MapName)
+		return nil, fmt.Errorf("map %q: no metrics found", spec.Name)
 	}
 	met.metrics = ms.metrics
 
 	// grab a reference to target map
-	m, err := loader.CreateOrCloneMap(opts.MapName)
+	m, err = m.Clone()
 	if err != nil {
 		return nil, err
 	}
