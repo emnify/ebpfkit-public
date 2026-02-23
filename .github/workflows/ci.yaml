@@ -12,6 +12,7 @@ jobs:
         tag:
          - 6.8
          - 6.15
+         - 6.19.1
     steps:
      - name: Git checkout
        uses: actions/checkout@v4
@@ -26,4 +27,4 @@ jobs:
      - name: "Install vimto: virtual machine testing orchestrator for the Go toolchain"
        run: CGO_ENABLED=0 go install lmb.io/vimto@v0.2.0
      - name: Run tests
-       run: vimto -sudo -kernel ghcr.io/cilium/ci-kernels:${{ matrix.tag }} -- go test -v ./...
+       run: vimto -sudo -kernel ghcr.io/emnify/ci-kernels:${{ matrix.tag }} -- go test -v ./...
