@@ -1,13 +1,13 @@
 module tech.emnify.com/go/ebpfkit
 
-go 1.23.1
+go 1.25.0
 
 require (
-	github.com/cilium/ebpf v0.19.0
+	github.com/cilium/ebpf v0.22.0
 	github.com/google/go-cmp v0.7.0
 	github.com/prometheus/client_golang v1.23.0
-	github.com/stretchr/testify v1.10.0
-	golang.org/x/sys v0.33.0
+	github.com/stretchr/testify v1.11.1
+	golang.org/x/sys v0.43.0
 )
 
 require (
